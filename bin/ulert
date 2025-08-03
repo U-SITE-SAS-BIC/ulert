@@ -1,0 +1,22 @@
+#!/usr/bin/env node
+
+const { program } = require('commander');
+const audit = require('../src/audit');
+
+program
+  .name('ulert')
+  .description('CLI to audit website health')
+  .version('0.1.0');
+
+program
+  .command('audit')
+  .description('Audit a website')
+  .argument('<url>', 'URL to audit')
+  .action(async (url) => {
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
+    await audit(url);
+  });
+
+program.parse();

@@ -1,0 +1,25 @@
+{
+  "name": "ulert",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "bin": {
+    "ulert": "./bin/ulert"
+  },
+  "keywords": [
+    "website",
+    "monitoring",
+    "audit",
+    "security",
+    "cli",
+    "uptime"
+  ],
+  "author": "u-site.app",
+  "license": "MIT",
+  "description": "",
+  "devDependencies": {
+    "jest": "^29.7.0"
+  }
+}
