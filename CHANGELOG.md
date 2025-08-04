@@ -12,7 +12,7 @@ Desarrollado con ❤️ por [u-site.app](https://u-site.app) — Software ético
 
 ---
 
-## 🚀 Próximamente – v0.2.0 (en desarrollo)
+## 🚀 Próximamente – v1.1.0 (en desarrollo)
 
 - [ ] Soporte para reporte en formato JSON
 - [ ] Opción `--output` para personalizar ruta del reporte
@@ -22,7 +22,21 @@ Desarrollado con ❤️ por [u-site.app](https://u-site.app) — Software ético
 
 ---
 
-## 🟢 v0.1.0 - 3 de agosto de 2025
+
+## 🟢 v1.0.0 - 3 de agosto de 2025
+
+### 🚀 Lanzamiento oficial
+
+Hoy lanzamos **Ulert v1.0.0**, el primer proyecto open source de **u-site.app**.  
+Esta versión marca la estabilidad del núcleo del software y el compromiso con la comunidad de desarrolladores, diseñadores y empresas que necesitan herramientas transparentes, privadas y confiables para mantener sus sitios web saludables.
+
+> ✅ **Ulert es oficialmente 1.0.0**  
+> ✅ Listo para producción  
+> ✅ Documentación completa  
+> ✅ Open source (MIT)
+
+---
+
 
 ### ✨ Nueva funcionalidad
 - ✅ Comando `ulert audit <url>` para auditar sitios web
