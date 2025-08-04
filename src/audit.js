@@ -6,14 +6,20 @@ const reporter = require('./reporter');
 async function audit(url) {
   console.log(`🔍 Auditing ${url}...\n`);
 
+  // Primero ejecutamos las funciones y guardamos los resultados
+  const httpResult = await httpCheck(url);
+  const linksResult = await linkScanner(url);
+
+  // Ahora construimos el objeto 'result' con todo
   const result = {
     url,
     timestamp: new Date().toISOString(),
-    http: await httpCheck(url),
-    links: await linkScanner(url),
-    security: securityAudit(url, await httpCheck.headers),
+    http: httpResult,
+    links: linksResult,
+    security: securityAudit(url, httpResult.headers), // ✅ Correcto: usamos 'httpResult'
   };
 
+  // Generamos los reportes
   reporter.cli(result);
   reporter.html(result, './reports/report.html');
 
