@@ -14,7 +14,6 @@ Desarrollado con ❤️ por [u-site.app](https://u-site.app) — Software ético
 
 ## 🚀 Próximamente – v1.1.0 (en desarrollo)
 
-- [ ] Soporte para reporte en formato JSON
 - [ ] Opción `--output` para personalizar ruta del reporte
 - [ ] Integración con GitHub Actions
 - [ ] Dockerfile para auto-hosting
@@ -22,6 +21,44 @@ Desarrollado con ❤️ por [u-site.app](https://u-site.app) — Software ético
 
 ---
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+## 🟢 v0.1.0 - 3 de agosto de 2025
+=======
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+## 🟢 v0.1.0 - 3 de agosto de 2025
+=======
+## 🟢 v1.0.1 - 5 de agosto de 2025
+
+### ✨ Mejoras
+
+- **Soporte mejorado para reporte JSON**:  
+  Ahora genera un **informe completo** con la misma información que el HTML, incluyendo métricas, enlaces rotos y resultados de seguridad.
+- **Traducción completa** de la interfaz y reportes (`es` y `en`).
+- **Nuevo diseño del reporte HTML**:
+  - Tipografía moderna (`Inter`).
+  - Estructura en **cards** para cada sección.
+  - **Badges** redondeados y con mejor contraste.
+  - **Tabla limpia** para enlaces rotos.
+  - Diseño **responsive** adaptable a móviles.
+- **Unificación de la salida en consola**:  
+  Ahora la información mostrada en consola es la misma tanto si se usa `--json` como si no.
+- **Normalización de URLs**:  
+  Es necesario especificar `http://` o `https://`.
+- **Tiempo de carga en español**:  
+  El reporte ahora muestra `⚡ Tiempo de carga: X ms` en lugar de `Load Time`.
+- **Consistencia en formatos**:  
+  Consola, HTML y JSON muestran la misma estructura de datos.
+- **Nueva opción de exportación personalizada**:  
+  Se añade la opción de **guardar el informe** en una ruta específica con  
+  ```bash
+  -o, --output <archivo>
+
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 ## 🟢 v1.0.0 - 3 de agosto de 2025
 
@@ -37,6 +74,14 @@ Esta versión marca la estabilidad del núcleo del software y el compromiso con 
 
 ---
 
+<<<<<<< Updated upstream
+=======
+<<<<<<< Updated upstream
+=======
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
+>>>>>>> Stashed changes
 
 ### ✨ Nueva funcionalidad
 - ✅ Comando `ulert audit <url>` para auditar sitios web
