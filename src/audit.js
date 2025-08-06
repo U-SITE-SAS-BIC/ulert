@@ -1,29 +1,23 @@
 const httpCheck = require('./http-check');
 const linkScanner = require('./link-scanner');
 const securityAudit = require('./security-audit');
-const reporter = require('./reporter');
 
 async function audit(url) {
-  console.log(`🔍 Auditing ${url}...\n`);
+  //console.log(`🔍 Auditing ${url}...\n`);
 
-  // Primero ejecutamos las funciones y guardamos los resultados
+  // Analizar el sitio
   const httpResult = await httpCheck(url);
   const linksResult = await linkScanner(url);
+  const securityResult = securityAudit(url, httpResult.headers);
 
-  // Ahora construimos el objeto 'result' con todo
-  const result = {
+  // Devolver datos sin imprimir ni generar reportes
+  return {
     url,
     timestamp: new Date().toISOString(),
     http: httpResult,
     links: linksResult,
-    security: securityAudit(url, httpResult.headers), // ✅ Correcto: usamos 'httpResult'
+    security: securityResult,
   };
-
-  // Generamos los reportes
-  reporter.cli(result);
-  reporter.html(result, './reports/report.html');
-
-  return result;
 }
 
 module.exports = audit;

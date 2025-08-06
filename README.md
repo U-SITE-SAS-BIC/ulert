@@ -58,6 +58,16 @@ Después de una auditoría, el reporte se guarda localmente. Ábrelo directament
  
 ---
 
+### Opciones CLI
+
+| Opción | Descripción | Ejemplo |
+|--------|-------------|---------|
+| `-o, --output <archivo>` | Ruta donde guardar el informe generado (HTML o JSON) | `--output ./informes` |
+| `--json` | Genera el reporte en formato JSON | `ulert audit https://sitio.com --json` |
+| `--lang <idioma>` | Idioma del reporte (`es` o `en`) | `--lang en` |
+
+---
+
 ## 🤝 Contribuir 
 
 ¡Nos encantan los contribuidores! Este proyecto es parte de la iniciativa de u-site.app para crear herramientas éticas y centradas en la privacidad. 

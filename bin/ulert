@@ -1,22 +1,71 @@
 #!/usr/bin/env node
 
 const { program } = require('commander');
+const chalk = require('chalk');
+const fs = require('fs');
+const path = require('path');
+
 const audit = require('../src/audit');
+const reporter = require('../src/reporter');
 
 program
   .name('ulert')
-  .description('CLI to audit website health')
+  .description('CLI para auditar la salud de un sitio web')
   .version('0.1.0');
 
 program
   .command('audit')
-  .description('Audit a website')
-  .argument('<url>', 'URL to audit')
-  .action(async (url) => {
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = 'https://' + url;
+  .description('Audita un sitio web')
+  .argument('<url>', 'URL del sitio a auditar')
+  .option('--json', 'Generar el informe en formato JSON')
+  .option('-o, --output <archivo>', 'Ruta donde guardar el informe', './reports')
+  .option('-l, --lang <codigo>', 'Idioma del informe HTML (es o en)', 'es')
+  .action(async (url, opciones) => {
+    try {
+      // Si el usuario no escribe https:// o http://, asumimos https://
+      if (!/^https?:\/\//i.test(url)) {
+        url = `https://${url}`;
+      }
+
+      console.log(chalk.cyan(`🔍 Auditando sitio: ${url}...\n`));
+
+      const resultado = await audit(url);
+
+      // 📌 Siempre mostrar el resumen en consola (con o sin JSON)
+      reporter.cli(resultado, opciones.lang);
+
+      // Crear carpeta de salida si no existe
+      const rutaSalida = path.resolve(opciones.output);
+      const carpetaSalida = path.extname(rutaSalida)
+        ? path.dirname(rutaSalida)
+        : rutaSalida;
+
+      if (!fs.existsSync(carpetaSalida)) {
+        fs.mkdirSync(carpetaSalida, { recursive: true });
+      }
+
+      // Guardar reportes
+      if (opciones.json) {
+        const archivo = path.extname(rutaSalida)
+          ? rutaSalida
+          : path.join(rutaSalida, 'report.json');
+
+        await reporter.json(resultado, archivo);
+        console.log(chalk.green(`✅ Informe JSON guardado en: ${archivo}`));
+      } else {
+        const archivo = path.extname(rutaSalida)
+          ? rutaSalida
+          : path.join(rutaSalida, 'report.html');
+
+        await reporter.html(resultado, archivo, opciones.lang);
+        console.log(chalk.green(`✅ Informe HTML guardado en: ${archivo} (${opciones.lang})`));
+      }
+
+      console.log(chalk.cyan('\n📊 Auditoría completada con éxito.'));
+    } catch (error) {
+      console.error(chalk.red(`❌ Error: ${error.message}`));
+      process.exit(1);
     }
-    await audit(url);
   });
 
-program.parse();
+program.parse(process.argv);
