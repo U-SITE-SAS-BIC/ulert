@@ -21,16 +21,6 @@ Desarrollado con ❤️ por [u-site.app](https://u-site.app) — Software ético
 
 ---
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-## 🟢 v0.1.0 - 3 de agosto de 2025
-=======
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-## 🟢 v0.1.0 - 3 de agosto de 2025
-=======
 ## 🟢 v1.0.1 - 5 de agosto de 2025
 
 ### ✨ Mejoras
@@ -57,8 +47,7 @@ Desarrollado con ❤️ por [u-site.app](https://u-site.app) — Software ético
   ```bash
   -o, --output <archivo>
 
->>>>>>> Stashed changes
->>>>>>> Stashed changes
+
 
 ## 🟢 v1.0.0 - 3 de agosto de 2025
 
@@ -74,14 +63,6 @@ Esta versión marca la estabilidad del núcleo del software y el compromiso con 
 
 ---
 
-<<<<<<< Updated upstream
-=======
-<<<<<<< Updated upstream
-=======
->>>>>>> Stashed changes
->>>>>>> Stashed changes
->>>>>>> Stashed changes
->>>>>>> Stashed changes
 
 ### ✨ Nueva funcionalidad
 - ✅ Comando `ulert audit <url>` para auditar sitios web
