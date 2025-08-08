@@ -68,6 +68,23 @@ Después de una auditoría, el reporte se guarda localmente. Ábrelo directament
 
 ---
 
+## 🧪 Ulert Labs (Funciones Experimentales)
+
+Ulert Labs es donde probamos las ideas más innovadoras del monitoreo web.
+
+- 🔭 **Ulert Cosmos™** – Descubre toda la huella digital de una marca.
+- 🕰️ **Ulert Time Machine™** – Compara tu sitio en el tiempo.
+- 🕵️ **Ulert Black Mirror™** – Mira tu sitio como lo ve un atacante.
+- 🧬 **Ulert DNA™** – Detecta clones visuales o estructurales.
+- 🌐 **Ulert Aura™** – Mapa mundial en vivo de sitios auditados.
+
+Actívalos desde CLI con:
+
+```bash
+ulert labs cosmos empresa.com
+
+---
+
 ## 🤝 Contribuir 
 
 ¡Nos encantan los contribuidores! Este proyecto es parte de la iniciativa de u-site.app para crear herramientas éticas y centradas en la privacidad. 
@@ -94,11 +111,10 @@ Ideas para contribuir:
 
 ## 📜 Licencia 
 
-Ulert está licenciado bajo la Licencia MIT — libre para uso personal y comercial. 
+Ulert está licenciado bajo la Licencia Apache 2.0 — libre para uso personal y comercial. 
 
 ---
 
 **Ulert** — Parte del conjunto de herramientas open source de [u-site.app](https://u-site.app) | [GitHub Organización](https://github.com/U-SITE-SAS-BIC/ulert.git)
      
-
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)

@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+const { Command } = require('commander');
+const program = new Command();
+
+// Subcomando cosmos
+program
+  .command('cosmos <target>')
+  .description('Crea un mapa dinámico del ADN web de una marca')
+  .action(async (target) => {
+    const path = require('path');
+    const cosmos = require(path.join(__dirname, '../labs/cosmos'));
+
+    await cosmos.run(target);
+  });
+
+program.parse(process.argv);

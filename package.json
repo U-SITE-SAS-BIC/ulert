@@ -1,6 +1,6 @@
 {
   "name": "ulert",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Open source website guardian — audit uptime, broken links, and security headers from the command line.",
   "main": "index.js",
   "bin": {
@@ -22,7 +22,7 @@
     "open-source"
   ],
   "author": "u-site.app",
-  "license": "MIT",
+  "license": "Apache-2.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/U-SITE-SAS-BIC/ulert.git"
@@ -31,10 +31,23 @@
   "bugs": {
     "url": "https://github.com/U-SITE-SAS-BIC/ulert/issues"
   },
+  "funding": {
+    "type": "custom",
+    "url": "https://u-site.app"
+  },
+  "contributors": [
+    {
+      "name": "LizandroGD",
+      "email": "equipo@u-site.app",
+      "url": "https://github.com/LizandroGD"
+    }
+  ],
   "dependencies": {
     "axios": "^1.11.0",
+    "chalk": "^4.1.2",
     "cheerio": "^1.1.2",
-    "commander": "^14.0.0"
+    "commander": "^14.0.0",
+    "node-fetch": "^2.7.0"
   },
   "devDependencies": {
     "jest": "^29.7.0"
@@ -44,8 +57,12 @@
   },
   "files": [
     "bin/",
+    "labs/",
     "src/",
     "README.md",
-    "LICENSE"
+    "LICENSE",
+    "CODE_OF_CONDUCT.md",
+    "CONTRIBUTING.md",
+    "SECURITY.md"
   ]
 }
