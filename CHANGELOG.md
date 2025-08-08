@@ -17,7 +17,21 @@ Desarrollado con ❤️ por [u-site.app](https://u-site.app) — Software ético
 - [ ] Opción `--output` para personalizar ruta del reporte
 - [ ] Integración con GitHub Actions
 - [ ] Dockerfile para auto-hosting
-- [ ] Alertas por Discord (opcional)
+- [ ] Alertas por Discord
+
+---
+## 🟢 v1.0.3 - 7 de agosto de 2025
+
+### 🚀 Nuevas funcionalidades
+- 🔭 **Integración con Ulert Cosmos:** se agregó soporte para analizar dominios usando el módulo Cosmos, permitiendo análisis OSINT más completos.
+- 📄 **Licencia incluida:** ahora el repositorio incluye una licencia oficial (`LICENSE`) que define los términos de uso del proyecto.
+
+### 🛠️ Cambios generales
+- Refactorización menor de módulos para mejorar la organización del código.
+- Se actualizaron las rutas internas para soportar mejor los submódulos.
+
+### 🐛 Correcciones
+- Correcciones menores en la visualización de los datos del análisis.
 
 ---
 
