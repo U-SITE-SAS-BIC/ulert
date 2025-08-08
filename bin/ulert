@@ -11,7 +11,7 @@ const reporter = require('../src/reporter');
 program
   .name('ulert')
   .description('CLI para auditar la salud de un sitio web')
-  .version('0.1.0');
+  .version('1.0.2');
 
 program
   .command('audit')
@@ -67,5 +67,10 @@ program
       process.exit(1);
     }
   });
+
+// Subcomando: ulert labs cosmos <target>
+program
+  .command('labs', 'Accede a funciones experimentales de Ulert Labs');
+
 
 program.parse(process.argv);
