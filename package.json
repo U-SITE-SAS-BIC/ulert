@@ -1,6 +1,6 @@
 {
   "name": "ulert",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Open source website guardian — audit uptime, broken links, and security headers from the command line.",
   "main": "index.js",
   "bin": {

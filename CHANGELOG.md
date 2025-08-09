@@ -20,6 +20,16 @@ Desarrollado con ❤️ por [u-site.app](https://u-site.app) — Software ético
 - [ ] Alertas por Discord
 
 ---
+## 🟢 v1.0.4 - 9 de agosto de 2025
+
+### 🚀 Nuevas funcionalidades
+- 🔭 **Ulert Cosmos:** se añadió soporte para el análisis integral de dominios a través del módulo Cosmos, incluyendo escaneo DNS, WHOIS, autenticación de email (DMARC, SPF, DKIM), capturas de pantalla y más.
+
+### 🛠️ Mejoras generales
+- Se incorporaron nuevas funcionalidades y mejoras al módulo Ulert Cosmos para un análisis más completo y detallado.
+- Se optimizó y mejoró la presentación del log en terminal para una visualización más clara y estilizada.
+
+---
 ## 🟢 v1.0.3 - 7 de agosto de 2025
 
 ### 🚀 Nuevas funcionalidades
