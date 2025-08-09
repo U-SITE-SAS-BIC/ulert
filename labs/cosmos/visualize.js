@@ -17,7 +17,7 @@ function getNodeStyle(type) {
   const styles = {
     main: { shape: 'box', color: '#1f77b4' },
     subdomain: { shape: 'dot', color: '#2ca02c' },
-    email: { shape: 'dot', color: '#d62728' },
+    email: { shape: 'dot', color: 'rgba(214, 39, 40, 1)' },
     repo: { shape: 'dot', color: '#9467bd' },
     ip: { shape: 'hexagon', color: '#ff7f0e' },
     tech: { shape: 'dot', color: '#17becf' },
@@ -25,8 +25,12 @@ function getNodeStyle(type) {
     cert: { shape: 'diamond', color: '#e377c2' },
     asn: { shape: 'hexagon', color: '#bcbd22' },
     html: { shape: 'triangle', color: '#7f7f7f' },
-    default: { shape: 'dot', color: '#ccc' }
+    dns: { shape: 'star', color: '#ff6347' }, 
+
+    default: { shape: 'dot', color: '#ccc' },
+
   };
+
   return styles[type] || styles.default;
 }
 
@@ -104,19 +108,21 @@ function generateHTML(output) {
 
     // Leyenda
     const legend = document.getElementById('legend');
-    const nodeStyles = ${JSON.stringify({
+   const nodeStyles = ${JSON.stringify({
     main: { shape: 'box', color: '#1f77b4' },
     subdomain: { shape: 'dot', color: '#2ca02c' },
     email: { shape: 'dot', color: '#d62728' },
     repo: { shape: 'dot', color: '#9467bd' },
     ip: { shape: 'hexagon', color: '#ff7f0e' },
-    tech: { shape: 'dot', color: '#17becf' },
+    tech: { shape: 'dot', color: '#17becf' },  
     ga: { shape: 'diamond', color: '#8c564b' },
     cert: { shape: 'diamond', color: '#e377c2' },
     asn: { shape: 'hexagon', color: '#bcbd22' },
     html: { shape: 'triangle', color: '#7f7f7f' },
+    dns: { shape: 'star', color: '#ff6347' },
     default: { shape: 'dot', color: '#ccc' }
   })};
+
     legend.innerHTML = Object.entries(nodeStyles)
       .filter(([type]) => type !== 'default')
       .map(([type, style]) =>
@@ -137,7 +143,14 @@ function generateElegantReportHTML(output) {
     'Google Analytics': '📊',
     'Certificado SSL': '🔒',
     'ASN': '🛰️',
-    'Fingerprint HTML': '🖼️'
+    'Fingerprint HTML': '🖼️',
+    'Tecnologías': '🛠️',
+    'DNS': '🕸️',
+    'whois': '📜',
+    'Subdomain Takeovers': '🚨',
+    'Security Headers': '🛡️',
+    'Email Auth': '✉️',
+    'Screenshot': '📸'
   };
 
   output.edges.forEach(edge => {
@@ -240,13 +253,12 @@ function generateElegantReportHTML(output) {
 }
 
 
-
-
 module.exports.generate = async (target, data) => {
   // Quitar http:// o https:// si viene incluido
   target = target.replace(/^https?:\/\//, '');
 
   console.log('🌐 Generando mapa neuronal...');
+  console.log('--------------------------------------------');
 
   ensureOutputDir();
 
@@ -287,11 +299,29 @@ module.exports.generate = async (target, data) => {
     { tipo: 'ga', label: 'Google Analytics', datos: data.fingerprintData?.ga ? [data.fingerprintData.ga] : [] },
     { tipo: 'asn', label: 'ASN', datos: data.fingerprintData?.asn ? [data.fingerprintData.asn] : [] },
     { tipo: 'cert', label: 'Certificado SSL', datos: data.fingerprintData?.cert ? [data.fingerprintData.cert] : [] },
+    { tipo: 'html', label: 'Fingerprint HTML', datos: data.fingerprintData?.htmlSig ? [data.fingerprintData.htmlSig] : [] },
     {
-      tipo: 'html',
-      label: 'Fingerprint HTML',
-      datos: data.fingerprintData?.htmlSig ? [data.fingerprintData.htmlSig] : []
-    }
+      tipo: 'dns',
+      label: 'DNS',
+      datos: Object.entries(data.fingerprintData?.dnsRecords || {})
+        .flatMap(([tipo, valores]) =>
+          valores.map(v => {
+            if (typeof v === 'object' && v !== null) {
+              if (tipo === 'MX') {
+                return `MX → Exchange: ${v.exchange || 'N/A'} (Prioridad: ${v.priority ?? 'N/A'})`;
+              }
+              return `${tipo}: ${JSON.stringify(v)}`;
+            }
+            return `${tipo}: ${v}`;
+          })
+        )
+    },
+    { tipo: 'tech', label: 'Tecnologías', datos: data.fingerprintData?.htmlSig?.technologies || [] },
+    { tipo: 'whois', label: 'WHOIS', datos: data.fingerprintData?.whoisData ? [data.fingerprintData.whoisData] : [] },
+    { tipo: 'subdomainTakeovers', label: 'Subdomain Takeovers', datos: (data.fingerprintData?.subdomainTakeovers || []).map(item => ({ ...item, subdomain: item.subdomain?.replace(/\n/g, ', ') })) },
+    { tipo: 'securityHeaders', label: 'Security Headers', datos: data.fingerprintData?.securityHeaders ? [data.fingerprintData.securityHeaders] : [] },
+    { tipo: 'emailAuth', label: 'Email Auth', datos: data.fingerprintData?.emailAuth ? [data.fingerprintData.emailAuth] : [] },
+    { tipo: 'screenshot', label: 'Screenshot', datos: data.fingerprintData?.screenshot ? [data.fingerprintData.screenshot] : [] }
   ];
 
   // Crear nodos de tipo y enlazarlos a la raíz
@@ -303,8 +333,7 @@ module.exports.generate = async (target, data) => {
       datos.forEach(valor => {
         let displayValue = valor;
 
-        // 💡 Si es un objeto (como el cert), conviértelo a string legible
-        if (typeof valor === 'object') {
+        if (typeof valor === 'object' && valor !== null) {
           if (tipo === 'cert') {
             displayValue = `
 CN: ${valor.subject?.CN || 'N/A'}
@@ -320,28 +349,98 @@ Fingerprint: ${valor.fingerprint}
                 : valor.description
               : 'N/A';
 
+            const techs = Array.isArray(valor.technologies) ? valor.technologies.join(', ') : 'Ninguna';
+
+            const relevantHeaders = [
+              'server',
+              'x-powered-by',
+              'strict-transport-security',
+              'content-security-policy',
+              'x-frame-options'
+            ];
+
+            let cookiesDetalle = 'N/A';
+            if (valor.cookies?.length > 0) {
+              cookiesDetalle = valor.cookies.map(cookie => `     - ${cookie.split('=')[0]}`).join('\n');
+            }
+
+            let headersDetalle = 'N/A';
+            if (valor.headers) {
+              const encontrados = relevantHeaders
+                .filter(hdr => valor.headers[hdr])
+                .map(hdr => `     - ${hdr}: ${valor.headers[hdr]}`);
+              if (encontrados.length > 0) {
+                headersDetalle = encontrados.join('\n');
+              }
+            }
+
             displayValue = `
 Título: ${valor.title || 'N/A'}
 Descripción: ${descripcionCorta}
 Hash: ${valor.hash?.slice(0, 16) || 'N/A'}...
-Cookies: ${valor.cookies?.length || 0}
-Tecnologías: ${valor.technologies?.join(', ') || 'Ninguna'}
+Cookies (${valor.cookies?.length || 0}):
+${cookiesDetalle}
+Tecnologías: ${techs}
+Recursos externos: scripts(${valor.scripts.length}), css(${valor.styles.length}), imgs(${valor.images.length})
+Encabezados HTTP relevantes:
+${headersDetalle}
 `.trim();
+
+          } else if (tipo === 'whois') {
+            displayValue = `
+Registrante: ${valor.registrant || 'N/A'}
+Registrador: ${valor.registrar || 'N/A'}
+Creado: ${valor.creationDate || 'N/A'}
+Expira: ${valor.expiryDate || 'N/A'}
+Fuente: ${valor.source || 'N/A'}
+`.trim();
+
+          } else if (tipo === 'subdomainTakeovers') {
+            displayValue = `
+Subdominio: ${valor.subdomain || 'N/A'}
+Vulnerable: ${valor.vulnerable ? '✅ Sí' : '❌ No'}
+`.trim();
+
+          } else if (tipo === 'screenshot') {
+            const url = valor.url || 'N/A';
+            displayValue = `
+URL: <a href="${url}" target="_blank">${url}</a>
+Archivo: <a href="${valor.file}" target="_blank">${valor.file}</a>
+Fuente: ${valor.source || 'N/A'}
+`.trim();
+          } else if (tipo === 'securityHeaders') {
+            const securityHeaders = valor; // si ya lo tienes en valor, no necesitas volver a hacer la petición
+            displayValue = `
+CSP: ${securityHeaders.CSP || 'N/A'}
+HSTS: ${securityHeaders.HSTS || 'N/A'}
+X-Frame-Options: ${securityHeaders.XFrameOptions || 'N/A'}
+X-Content-Type-Options: ${securityHeaders.XContentTypeOptions || 'N/A'}
+Source: ${securityHeaders.source || 'N/A'}
+`.trim();
+          } else if (tipo === 'emailAuth') {
+            const emailAuth = valor;
+            displayValue = `
+DMARC: ${(emailAuth.DMARC || 'N/A').slice(0, 20)}${(emailAuth.DMARC || '').length > 20 ? '...' : ''}
+SPF: ${emailAuth.SPF || 'N/A'}
+DKIM: ${(emailAuth.DKIM || 'N/A').slice(0, 20)}${(emailAuth.DKIM || '').length > 20 ? '...' : ''}
+Source: ${emailAuth.source || 'N/A'}
+Timestamp: ${emailAuth.timestamp || 'N/A'}
+`.trim();
+          } else if (tipo === 'tech') {
+            displayValue = Array.isArray(valor) ? valor.join(', ') : String(valor);
           } else {
-            displayValue = JSON.stringify(valor).slice(0, 100) + '...';
+            displayValue = JSON.stringify(valor, null, 2);
           }
         }
 
-
-
-        const safeValueId = `${tipo}_${typeof valor === 'object' ? JSON.stringify(valor).slice(0, 30) : valor}`;
+        const safeValueId = `${tipo}_${typeof valor === 'object'
+          ? JSON.stringify(valor).slice(0, 30)
+          : valor}`;
         const valorId = addNode(safeValueId, tipo, displayValue);
-
         addEdge(tipoId, valorId);
       });
     }
   });
-
 
   // Guardar JSON
   const jsonPath = path.join(OUTPUT_DIR, `${sanitizeId(target)}_cosmos.json`);
@@ -350,11 +449,15 @@ Tecnologías: ${valor.technologies?.join(', ') || 'Ninguna'}
   const htmlPath = path.join(OUTPUT_DIR, `${sanitizeId(target)}_cosmos.html`);
   fs.writeFileSync(htmlPath, generateHTML(output));
 
-  // Guardar HTML elegante
   const elegantHTMLPath = path.join(OUTPUT_DIR, `${sanitizeId(target)}_resumen.html`);
   fs.writeFileSync(elegantHTMLPath, generateElegantReportHTML(output));
-  console.log(`📄 Resumen HTML guardado en: ${elegantHTMLPath}`);
 
+  console.log(`📄 Resumen HTML guardado en: ${elegantHTMLPath}`);
   console.log(`🧾 Mapa JSON guardado en: ${jsonPath}`);
   console.log(`🌐 Mapa HTML guardado en: ${htmlPath}`);
+
+  console.log('✅ Mapa neuronal generado con éxito.');
+
+
 };
+

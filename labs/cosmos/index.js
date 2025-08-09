@@ -19,16 +19,47 @@
 
 
 const { Command } = require('commander');
+const chalk = require('chalk');
+const boxen = require('boxen').default; 
+
 const osint = require('./osint');
 const fingerprint = require('./fingerprint');
 const visualize = require('./visualize');
 
 module.exports.run = async (target) => {
-  console.log(`🔭 Ejecutando Ulert Cosmos™ para: ${target}`);
+  const header = `
+${chalk.cyan.bold('🚀  Ulert Cosmos™ – Escaneo Iniciado')}
+${chalk.white('🔭  Objetivo:')} ${chalk.yellow(target)}
+${chalk.white('📅  Fecha:')} ${chalk.green(new Date().toLocaleString())}
+`;
+
+  console.log(
+    boxen(header.trim(), {
+      padding: 1,
+      margin: 1,
+      borderStyle: 'double',
+      borderColor: 'magentaBright'
+    })
+  );
 
   const osintData = await osint.run(target);
   const fingerprintData = await fingerprint.run(target, osintData);
   await visualize.generate(target, { osintData, fingerprintData });
 
-  console.log('✅ Análisis finalizado.');
+  console.log(
+    boxen(
+      `
+${chalk.green.bold('✅  Análisis Finalizado')}
+${chalk.white('🌐  Más información en:')} ${chalk.cyan.underline('https://ulert.u-site.app')}
+${chalk.magentaBright('✨ Gracias por usar Ulert Cosmos™')}
+    `.trim(),
+      {
+        padding: 1,
+        margin: 1,
+        borderStyle: 'double',
+        borderColor: 'greenBright'
+      }
+    )
+  );
+
 };
