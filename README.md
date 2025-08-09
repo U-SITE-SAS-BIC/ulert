@@ -80,8 +80,7 @@ Ulert Labs es donde probamos las ideas más innovadoras del monitoreo web.
 
 Actívalos desde CLI con:
 
-```bash
-ulert labs cosmos empresa.com
+    ulert labs cosmos empresa.com
 
 ---
 
