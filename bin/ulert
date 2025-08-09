@@ -1,12 +1,30 @@
 #!/usr/bin/env node
 
+
+
 const { program } = require('commander');
 const chalk = require('chalk');
 const fs = require('fs');
 const path = require('path');
+const ora = require('ora').default;
+const logSymbols = require('log-symbols');
 
 const audit = require('../src/audit');
 const reporter = require('../src/reporter');
+
+// Definir paleta de colores reutilizable
+const colors = {
+  title: chalk.hex('#4db6ac').bold,           // turquesa suave
+  label: chalk.gray,                           // gris neutro para etiquetas
+  highlight: chalk.hex('#d9a441'),             // mostaza suave para valores importantes
+  date: chalk.hex('#6a8a82'),                  // verde grisáceo suave para fechas
+  spinner: chalk.hex('#5a8f7b'),                // verde apagado para spinner
+  success: chalk.hex('#4caf50'),                 // verde musgo para mensajes de éxito
+  info: chalk.hex('#6a8a82'),                     // gris verdoso suave para info general
+  link: chalk.hex('#4db6ac').underline,         // turquesa para links
+  thanks: chalk.hex('#9575cd'),                   // lila suave para agradecimientos
+  error: chalk.red                             // rojo para errores
+};
 
 program
   .name('ulert')
@@ -22,19 +40,27 @@ program
   .option('-l, --lang <codigo>', 'Idioma del informe HTML (es o en)', 'es')
   .action(async (url, opciones) => {
     try {
-      // Si el usuario no escribe https:// o http://, asumimos https://
       if (!/^https?:\/\//i.test(url)) {
         url = `https://${url}`;
       }
 
-      console.log(chalk.cyan(`🔍 Auditando sitio: ${url}...\n`));
+      // Encabezado
+      console.log(colors.label('######################################'));
+      console.log();
+      console.log(colors.title('🔍  Ulert – Iniciando Auditoría'));
+      console.log(colors.label('🔭  Objetivo:'), colors.highlight(url));
+      console.log(colors.label('📅  Fecha:'), colors.date(new Date().toLocaleString()));
+      console.log(colors.label('-------------------------------------'));
+      console.log();
+
+      const spinner = ora(colors.spinner('Ejecutando auditoría...')).start();
 
       const resultado = await audit(url);
 
-      // 📌 Siempre mostrar el resumen en consola (con o sin JSON)
+      spinner.succeed(colors.success('Auditoría completada, generando informe...'));
+
       reporter.cli(resultado, opciones.lang);
 
-      // Crear carpeta de salida si no existe
       const rutaSalida = path.resolve(opciones.output);
       const carpetaSalida = path.extname(rutaSalida)
         ? path.dirname(rutaSalida)
@@ -44,33 +70,36 @@ program
         fs.mkdirSync(carpetaSalida, { recursive: true });
       }
 
-      // Guardar reportes
       if (opciones.json) {
         const archivo = path.extname(rutaSalida)
           ? rutaSalida
           : path.join(rutaSalida, 'report.json');
-
         await reporter.json(resultado, archivo);
-        console.log(chalk.green(`✅ Informe JSON guardado en: ${archivo}`));
+        console.log(colors.info(`💾 Informe JSON guardado en: ${archivo}`));
       } else {
         const archivo = path.extname(rutaSalida)
           ? rutaSalida
           : path.join(rutaSalida, 'report.html');
-
         await reporter.html(resultado, archivo, opciones.lang);
-        console.log(chalk.green(`✅ Informe HTML guardado en: ${archivo} (${opciones.lang})`));
+        console.log(colors.info(`💾 Informe HTML guardado en: ${archivo} (${opciones.lang})`));
       }
 
-      console.log(chalk.cyan('\n📊 Auditoría completada con éxito.'));
+      // Mensaje final
+      console.log();
+      console.log(colors.success.bold('📊  Auditoría completada con éxito.'));
+      console.log(colors.label('-------------------------------------'));
+      console.log(colors.label('🌐  Más información en:'), colors.link('https://ulert.u-site.app'));
+      console.log(colors.thanks('✨  Gracias por usar Ulert'));
+      console.log();
+      console.log(colors.label('######################################'));
+
     } catch (error) {
-      console.error(chalk.red(`❌ Error: ${error.message}`));
+      console.error(logSymbols.error, colors.error(`Error: ${error.message}`));
       process.exit(1);
     }
   });
 
-// Subcomando: ulert labs cosmos <target>
 program
   .command('labs', 'Accede a funciones experimentales de Ulert Labs');
-
 
 program.parse(process.argv);

@@ -20,7 +20,6 @@ const linkScanner = require('./link-scanner');
 const securityAudit = require('./security-audit');
 
 async function audit(url) {
-  //console.log(`🔍 Auditing ${url}...\n`);
 
   // Analizar el sitio
   const httpResult = await httpCheck(url);
